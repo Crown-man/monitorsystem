@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.CpuMapper">
+    <insert id="insert" parameterType="com.cidp.monitorsystem.model.Cpu">
+        insert into cpu(ip,cpuRate,time)
+        values (#{ip},#{cpuRate},#{time})
+    </insert>
+    <select id="getNextIp" resultType="String">
+        select ip from DeviceType  where id=(select min(id) from DeviceType  where id> (SELECT id from DeviceType where ip =#{ip}))
+    </select>
+    <select id="getMaxIp" resultType="String">
+        select ip from DeviceType where id = (select max(id) from DeviceType);
+    </select>
+    <select id="getMinIp" resultType="String">
+        select ip from DeviceType where id = (select min(id) from DeviceType);
+    </select>
+    <select id="GetInfoInSql" resultType="com.cidp.monitorsystem.model.Cpu">
+         select * from  cpu where ip=#{ip} and  DATE(time)=CURDATE()  order  by  time  desc limit 5
+    </select>
+    <select id="GetCpuInfoOne" resultType="com.cidp.monitorsystem.model.Cpu">
+        select * from cpu where ip = #{ip} order by time desc limit 1
+    </select>
+</mapper>

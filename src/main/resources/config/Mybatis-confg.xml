@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="TrapCollect" type="com.cidp.monitorsystem.model.TrapCollect" />
+    </typeAliases>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://123.56.16.15:3306/monitorsys?useUnicode=true;characterEncoding=UTF-8;serverTimezone=Asia/Shanghai" />
+                <property name="username" value="root" />
+                <property name="password" value="123456" />
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!-- // power by http://www.yiibai.com -->
+        <mapper resource="com/cidp/monitorsystem/mapper/TrapCollectMapper.xml" />
+    </mappers>
+</configuration>

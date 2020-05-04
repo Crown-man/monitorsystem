@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.SystemInfoMapper">
+    <insert id="insert" parameterType="java.util.List" useGeneratedKeys="true">
+        insert into system
+        (ip,sysDecsr,sysObjectID,sysUpTime,sysContact,sysName,sysLocation,sysService,time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.ip},
+            #{item.sysDecsr},
+            #{item.sysObjectID},
+            #{item.sysUpTime},
+            #{item.sysContact},
+            #{item.sysName},
+            #{item.sysLocation},
+            #{item.sysService},
+            #{item.time}
+            )
+        </foreach>
+    </insert>
+    <update id="updateDevice">
+      update system set typeName= #{typeName},name=#{name},selfDecs=#{selfDecs} where ip=#{ip}
+    </update>
+    <select id="getBaseInfo" resultType="com.cidp.monitorsystem.model.SystemInfo">
+        select * from system where ip = #{ip}
+    </select>
+    <select id="getIps" resultType="java.lang.String">
+         select ip from system
+    </select>
+    <select id="getAllDevice" resultType="com.cidp.monitorsystem.model.SystemInfo">
+        select id,ip,typeName,name,icon from system
+    </select>
+</mapper>

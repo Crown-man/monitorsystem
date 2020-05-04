@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.AtTableMapper">
+    <insert id="insert">
+        insert into atTable(ip,atIfIndex,atPhysAddress,atNetAddress)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.ip},
+            #{item.atIfIndex},
+            #{item.atPhysAddress},
+            #{item.atNetAddress}
+            )
+        </foreach>
+    </insert>
+    <delete id="deleteAll">
+        delete from atTable
+    </delete>
+</mapper>

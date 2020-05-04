@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.IpRouteTableMapper">
+    <insert id="insert" parameterType="java.util.ArrayList">
+        insert into IpRouteTable(ip,ipRouteDest,ipRouteIfIndex,ipRouteNextHop,ipRouteType,ipRouteMask)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.ip},
+            #{item.ipRouteDest},
+            #{item.ipRouteIfIndex},
+            #{item.ipRouteNextHop},
+            #{item.ipRouteType},
+            #{item.ipRouteMask}
+            )
+        </foreach>
+    </insert>
+    <select id="selectNextRoute" resultType="java.lang.String">
+        select distinct ipRouteNextHop from IpRouteTable where ipRouteType = '4' and ip = #{ip}
+    </select>
+    <delete id="deleteAll">
+        delete from IpRouteTable
+    </delete>
+    <insert id="insertError">
+        insert into IpRouteTable(ip,ipRouteDest,ipRouteIfIndex,ipRouteNextHop,ipRouteType,ipRouteMask)
+        values (#{ip},0,0,0,0,0)
+    </insert>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.InterFlowMapper">
+    <insert id="insert" useGeneratedKeys="true" parameterType="com.cidp.monitorsystem.model.InterFlow">
+        insert into InterFlow(ip,ifindex,interDescr,inFlow,outFlow,inLoss,outLoss,inRate,outRate,inErrorRate,outErrorRate,time)
+        values
+        <foreach collection="list" separator="," item="item" index="index">
+            (
+            #{item.ip},
+            #{item.ifindex},
+            #{item.interDescr},
+            #{item.inFlow},
+            #{item.outFlow},
+            #{item.inLoss},
+            #{item.outLoss},
+            #{item.inRate},
+            #{item.outRate},
+            #{item.inErrorRate},
+            #{item.outErrorRate},
+            #{item.time}
+            )
+        </foreach>
+    </insert>
+    <delete id="deleteAll">
+        delete from interface where ip = #{ip}
+    </delete>
+    <select id="getFlowByIp" resultType="com.cidp.monitorsystem.model.InterFlow">
+        SELECT * from InterFlow where ip=#{ip} and time =( SELECT time FROM InterFlow where ip =#{ip} GROUP BY time  ORDER BY time DESC LIMIT 1 )
+    </select>
+</mapper>

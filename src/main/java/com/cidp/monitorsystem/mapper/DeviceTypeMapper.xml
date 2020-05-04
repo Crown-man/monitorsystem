@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.DeviceTypeMapper">
+    <insert id="insert">
+        insert into DeviceType(deviceIp,ip,typeName,name)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.deviceIp},
+            #{item.ip},
+            #{item.typeName},
+            #{item.name}
+            )
+        </foreach>
+    </insert>
+    <select id="getIpWithLinkS" resultType="String">
+        select ip from DeviceType where typeName = #{type}
+    </select>
+    <select id="getAllDevice" resultType="String">
+       select DeviceType.ip from DeviceType left join IpAddrTable on DeviceType.ip=IpAddrTable.ipAdEntAddr where IpAddrTable.ipAdEntAddr is null
+    </select>
+    <update id="updateDevice">
+      update DeviceType set typeName= #{typeName},name=#{name} where ip=#{ip}
+    </update>
+    <select id="getAllDeviceShow" resultType="com.cidp.monitorsystem.model.DeviceType">
+        select * from DeviceType left join IpAddrTable on DeviceType.ip=IpAddrTable.ipAdEntAddr where IpAddrTable.ipAdEntAddr is null
+    </select>
+</mapper>

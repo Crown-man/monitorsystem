@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.DiagnosisMapper">
+    <resultMap type="com.cidp.monitorsystem.model.Diagnosis" id="BaseInfo">
+        <id column="id" property="id"/>
+        <result property="ip" column="ip" />
+        <result property="pid" column="pid" />
+        <result property="status" column="status" />
+        <result property="cause" column="cause" />
+        <result property="time" column="time" />
+        <result property="rank" column="rank" />
+        <result property="newTime" column="newTime" />
+        <result property="frequency" column="frequency" />
+        <association property="check"  javaType="com.cidp.monitorsystem.model.Point">
+            <result column="zhtype" property="zhtype"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert">
+        insert into diagnosis(ip,pid,cause,status,time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.ip},
+            #{item.pid},
+            #{item.cause},
+            #{item.status},
+            #{item.time}
+            )
+        </foreach>
+    </insert>
+    <insert id="insertByDia"  parameterType="com.cidp.monitorsystem.model.Diagnosis">
+       insert into diagnosis(ip,pid,cause,status,time)
+       values (#{ip},#{pid}, #{cause},#{status},#{time})
+    </insert>
+
+    <update id="updateRemark">
+        update diagnosis set remark =#{desc},status=1 where id = #{id}
+    </update>
+    <select id="getAllInfo" resultMap="BaseInfo">
+        SELECT d.id,d.ip,d.cause,d.time,d.`status`,d.remark,p.zhtype,d.rank FROM diagnosis d LEFT JOIN point p ON d.pid = p.id order by time  desc
+    </select>
+    <select id="getRemark" resultType="java.lang.String">
+        select remark from diagnosis where id = #{id}
+    </select>
+
+    <update id="updateIgnore">
+        update diagnosis set status=2 where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from diagnosis where id = #{id}
+    </delete>
+
+
+    <select id="selectUnhandledDiagnosisInfo" resultType="com.cidp.monitorsystem.model.ExportDiagnosis">
+        SELECT d.id,d.ip,d.cause,d.time,d.`status`,d.remark,p.zhtype FROM diagnosis as d,point p where d.pid = p.id and d.status=0 order by time  desc
+    </select>
+
+    <select id="selectProcessedDiagnosisInfo" resultType="com.cidp.monitorsystem.model.ExportDiagnosis">
+        SELECT d.id,d.ip,d.cause,d.time,d.`status`,d.remark,p.zhtype FROM diagnosis as d,point p where d.pid = p.id and d.status=1 order by time  desc
+    </select>
+    <select id="selectIgnoreDiagnosisInfo" resultType="com.cidp.monitorsystem.model.ExportDiagnosis">
+        SELECT d.id,d.ip,d.cause,d.time,d.`status`,d.remark,p.zhtype FROM diagnosis as d,point p where d.pid = p.id and d.status=2 order by time  desc
+    </select>
+
+    <select id="selectDiagnosisByIPAndzhtype" resultMap="BaseInfo" >
+         select diagnosis.ip,point.zhtype,time from diagnosis,point where pid = point.id and diagnosis.ip =#{ip} and point.zhtype = #{zhtype}  order by time desc
+    </select>
+
+
+</mapper>

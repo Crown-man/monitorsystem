@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.FaultOverviewMapper">
+    <select id="selectAllFaultNums" resultType="com.cidp.monitorsystem.model.FaultNums">
+      select zhtype as point,count(ip) as num from (select ip,zhtype from diagnosis,point where  diagnosis.pid =point.id
+UNION all select ip,zhpoint from snmptrap) as tab group by point
+    </select>
+
+    <select id="selectAllFaultNumsByTime" resultType="com.cidp.monitorsystem.model.FaultNums" parameterType="string">
+        select zhtype as point,count(ip) as num from (select ip,zhtype,time from diagnosis,point where diagnosis.pid =point.id
+        UNION all select ip,zhpoint,time from snmptrap) as tab where time &gt;= #{start} and time &lt;= #{end}  group by zhtype
+    </select>
+
+    <select id="selectIpFaultTop10" resultType="com.cidp.monitorsystem.model.IpFault">
+ select ip,count(ip) as num from (select ip,zhtype,time  from diagnosis,point where diagnosis.pid=point.id UNION all select ip,zhpoint,time from snmptrap order by time desc) as tab  group by ip  order by num desc limit 10
+    </select>
+
+    <select id="selectIpFaultTop10ByTime" resultType="com.cidp.monitorsystem.model.IpFault" parameterType="string">
+        select ip,count(ip) as num from (select ip,zhtype,time  from diagnosis,point where diagnosis.pid=point.id UNION all select ip,zhpoint,time from snmptrap where time &gt;=#{start} and time &lt;= #{end} order by time desc) as tab   group by ip order by num desc limit 10
+    </select>
+
+    <select id="selectAllEquipment" resultType="com.cidp.monitorsystem.model.Equipment">
+        select ip,typename,name from system
+    </select>
+
+    <select id="selectSpecifiedDeviceFailuresByIp" resultType="com.cidp.monitorsystem.model.Pie" parameterType="string">
+        select zhtype as name,count(zhtype) as value from (select zhtype from diagnosis,point where point.id = diagnosis.pid and diagnosis.ip=#{ip}  UNION ALL select zhpoint from snmptrap where ip = #{ip}) as tab group by name
+    </select>
+
+    <select id="selectSpecifiedDeviceFailuresByIpAccordingtoTime" parameterType="string" resultType="com.cidp.monitorsystem.model.EquipmentFailuresNums">
+       select zhtype as failuresName,count(zhtype) as num from (select zhtype,ip,time from diagnosis,point where point.id = diagnosis.pid and ip = #{ip} and time &gt;= #{start} and time &lt;= #{end} UNION ALL select zhpoint,ip,time from snmptrap where ip = #{ip} and time &gt;= #{start} and time &lt;= #{end}
+        ) as tab group by failuresName
+    </select>
+</mapper>

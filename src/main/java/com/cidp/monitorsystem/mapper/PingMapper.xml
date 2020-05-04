@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.PingMapper">
+    <resultMap id="BaseResultMap" type="com.cidp.monitorsystem.model.PingSuccess" >
+        <result column="ip" property="ip" jdbcType="VARCHAR" />
+        <result column="segment" property="segment" jdbcType="INTEGER" />
+        <result column="netmask" property="netmask" jdbcType="VARCHAR" />
+        <result column="isSnmp" property="isSnmp" jdbcType="INTEGER" />
+        <result column="time" property="time" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+      ip, segment, netmask,isSnmp,time
+    </sql>
+    <insert id="InsertPing" parameterType="java.util.List" useGeneratedKeys="true">
+        insert into ping
+        (ip, segment, netmask,isSnmp,time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.ip},
+            #{item.segment},
+            #{item.netmask},
+            #{item.isSnmp},
+            #{item.time}
+            )
+        </foreach>
+    </insert>
+    <select id="selectIsSnmp" resultType="com.cidp.monitorsystem.model.PingSuccess">
+        select
+        <include refid="Base_Column_List">
+        </include>
+        from ping
+        where isSnmp=1
+    </select>
+</mapper>

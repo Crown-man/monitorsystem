@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.ArpMapper">
+    <insert id="InsertArp" useGeneratedKeys="true" parameterType="com.cidp.monitorsystem.model.Arp">
+      insert into arp(ip,mac)
+      values (#{ip},#{mac})
+    </insert>
+    <insert id="insert">
+        insert into arp(localIp,ip,mac,time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.localIp},
+            #{item.ip},
+            #{item.mac},
+            #{item.time}
+            )
+        </foreach>
+    </insert>
+    <delete id="deleteAll">
+        delete from arp
+    </delete>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.NodeMapper">
+    <insert id="insert" parameterType="com.cidp.monitorsystem.topology.Node">
+        insert into Node(ip,parentId)
+        values (#{ip},#{parentId})
+    </insert>
+    <select id="getParentIp" resultType="java.lang.Integer">
+        select id from Node where ip = #{ip}
+    </select>
+    <delete id="deleteAll">
+        delete from Node
+    </delete>
+    <select id="getAllIp" resultType="String">
+        select ip from Node
+    </select>
+</mapper>

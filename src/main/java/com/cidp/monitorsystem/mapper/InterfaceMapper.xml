@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cidp.monitorsystem.mapper.InterfaceMapper">
+    <insert id="insert" useGeneratedKeys="true" parameterType="com.cidp.monitorsystem.model.Interface">
+        insert into interface(ip,Ifindex,IfDescr,IfType,IfOperStatus,IfAdminStatus,IfSpeed,IfMtu)
+        values
+        <foreach collection="list" separator="," item="item" index="index">
+            (
+            #{item.ip},
+            #{item.Ifindex},
+            #{item.IfDescr},
+            #{item.IfType},
+            #{item.IfOperStatus},
+            #{item.IfAdminStatus},
+            #{item.IfSpeed},
+            #{item.IfMtu}
+            )
+        </foreach>
+    </insert>
+    <delete id="deleteAll">
+        delete from interface where ip = #{ip}
+    </delete>
+    <select id="getBaseInfo" resultType="com.cidp.monitorsystem.model.Interface">
+        select * from interface where ip=#{ip}
+    </select>
+</mapper>
